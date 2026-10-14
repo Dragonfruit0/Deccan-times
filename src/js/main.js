@@ -1,10 +1,4 @@
 (function () {
-  // Editor invite / password-reset emails link to the home page; send them to the admin login
-  if (/(invite|recovery|confirmation|email_change)_token=/.test(location.hash)) {
-    location.replace("/admin/" + location.hash);
-    return;
-  }
-
   // Mobile menu
   var btn = document.querySelector(".menu");
   var menu = document.getElementById("mobileMenu");

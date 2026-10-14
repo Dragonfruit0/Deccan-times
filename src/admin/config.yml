@@ -1,21 +1,35 @@
 # Decap CMS — the Deccan Times newsroom at /admin
-# Editors log in with email + password (Netlify Identity + Git Gateway).
-# See README.md → "Admin panel login".
+# Editors log in with email + password through DecapBridge (https://decapbridge.com).
+# Replace YOUR-DECAPBRIDGE-SITE-ID (2 places) with the site ID from your
+# DecapBridge dashboard. See README.md → "Admin panel login".
 backend:
   name: git-gateway
+  repo: dragonfruit0/deccan-times
   branch: main
+  auth_type: pkce
+  base_url: https://auth.decapbridge.com
+  auth_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/pkce
+  auth_token_endpoint: /sites/YOUR-DECAPBRIDGE-SITE-ID/token
+  gateway_url: https://gateway.decapbridge.com
   commit_messages:
-    create: "News: publish “{{slug}}”"
-    update: "News: update “{{slug}}”"
-    delete: "News: remove “{{slug}}”"
-    uploadMedia: "Upload “{{path}}”"
-    deleteMedia: "Delete “{{path}}”"
+    create: "News: publish “{{slug}}” — {{author-name}}"
+    update: "News: update “{{slug}}” — {{author-name}}"
+    delete: "News: remove “{{slug}}” — {{author-name}}"
+    uploadMedia: "Upload “{{path}}” — {{author-name}}"
+    deleteMedia: "Delete “{{path}}” — {{author-name}}"
+
+# Show editors' names and emails from DecapBridge
+auth:
+  email_claim: email
+  first_name_claim: first_name
+  last_name_claim: last_name
+  avatar_url_claim: avatar_url
 
 # Uncomment to test the admin locally with `npx decap-server` (no login needed)
 # local_backend: true
 
-site_url: https://deccantimes.netlify.app
-display_url: https://deccantimes.netlify.app
+site_url: https://deccan-times.vercel.app
+display_url: https://deccan-times.vercel.app
 logo_url: /favicon.svg
 
 media_folder: src/images/uploads

@@ -4,7 +4,9 @@ A newspaper-style news website for **The Deccan Times** (Hyderabad), with an adm
 
 - **Site:** [Eleventy](https://www.11ty.dev/) static site. Every story becomes its own page with WhatsApp/Facebook preview tags.
 - **Admin panel:** [Decap CMS](https://decapcms.org/) at `/admin`.
-- **Hosting:** Netlify (free plan). The site rebuilds automatically each time a story is published.
+- **Hosting:** [Vercel](https://vercel.com/). The site rebuilds automatically each time a story is published.
+- **Editor logins:** [DecapBridge](https://decapbridge.com/) (email + password, no GitHub account needed).
+- **Contact form:** [Web3Forms](https://web3forms.com/) (messages are emailed to you).
 
 ## Pages
 
@@ -13,7 +15,7 @@ A newspaper-style news website for **The Deccan Times** (Hyderabad), with an adm
 | Front page | `/` |
 | Story | `/articles/<story-name>/` |
 | Section | `/category/hyderabad/`, `/category/sports/`, … |
-| About / Contact | `/about/`, `/contact/` (the contact form uses Netlify Forms) |
+| About / Contact | `/about/`, `/contact/` (contact form via Web3Forms) |
 | Search | `/search/?q=...` |
 | Admin | `/admin/` |
 
@@ -25,26 +27,32 @@ npm start          # opens http://localhost:8080
 npm run build      # outputs the finished site to _site/
 ```
 
-## Go live on Netlify (one time)
+## Go live on Vercel (one time)
 
-1. Merge this branch into `main` on GitHub (the admin panel publishes to `main`).
-2. In [Netlify](https://app.netlify.com/): **Add new site → Import an existing project → GitHub → dragonfruit0/deccan-times**. Netlify reads the build settings from `netlify.toml`.
-3. Optional: under **Domain management**, rename the site or connect your own domain (e.g. `deccantimes.in`). Then update `url` in `src/_data/site.json` and `site_url` in `src/admin/config.yml`.
+1. Merge this branch into `main` on GitHub. The admin panel saves stories to `main`, and Vercel publishes `main`.
+2. On [vercel.com](https://vercel.com/), sign in with GitHub, then **Add New → Project → Import `dragonfruit0/deccan-times`**.
+3. Leave the settings as they are (they come from `vercel.json`) and click **Deploy**. Your site will be live at something like `https://deccan-times.vercel.app`.
+4. If the address Vercel gives you is different, update `url` in `src/_data/site.json`, and `site_url` and `display_url` in `src/admin/config.yml`.
+5. Optional custom domain (e.g. `deccantimes.in`): **Vercel → Project → Settings → Domains**. Update the same `url` values afterwards.
 
-### Admin panel login (email + password)
+> **Vercel plan:** the free Hobby plan is for personal, non-commercial sites. If Deccan Times earns money from the website (ads, sponsored posts), Vercel's terms require the Pro plan.
 
-Editors log in with an email address and password. They do **not** need GitHub accounts. This uses Netlify Identity and Git Gateway.
+### Admin panel login (email + password via DecapBridge)
 
-1. In Netlify, open your site and go to **Project configuration → Identity**, then click **Enable Identity**.
-2. Under **Registration**, choose **Invite only**, so strangers can't sign up.
-3. Under **Services → Git Gateway**, click **Enable Git Gateway**. This lets the admin panel save stories to GitHub on the editors' behalf.
-4. Go to the **Identity** tab and click **Invite users**, then enter each editor's email.
-5. Each editor gets an email, clicks the link, and sets a password. After that they log in at `https://<your-site>/admin/`.
+1. Go to [decapbridge.com](https://decapbridge.com/) and sign up.
+2. **Add a site:** choose the `dragonfruit0/deccan-times` repo, and enter your Vercel address followed by `/admin/` as the CMS URL.
+3. Install the DecapBridge GitHub app on that repo when asked. This lets it save stories on your editors' behalf.
+4. DecapBridge shows a config snippet with your **site ID**. In `src/admin/config.yml`, replace both `YOUR-DECAPBRIDGE-SITE-ID` placeholders with that ID, then commit.
+5. In DecapBridge, **invite each editor by email**. They get a link, set a password, and then log in at `https://<your-site>/admin/`.
 
-Removing an editor: **Identity** tab → click the user → **Delete user**.
-Forgotten password: on the login box, click **Forgot password?**.
+Remove editors from the DecapBridge dashboard. Each story's GitHub commit records which editor published it.
 
-> Note: Netlify says Git Gateway still works but won't get new features. If it is ever switched off, the admin panel can move to another login service (e.g. DecapBridge) by changing the `backend` section of `src/admin/config.yml`; the site and stories stay the same.
+### Contact form (Web3Forms)
+
+1. Go to [web3forms.com](https://web3forms.com/), enter the email address that should receive messages, and copy the **access key** they send you.
+2. Paste it into `web3formsKey` in `src/_data/site.json` and commit.
+
+Until a key is added, the Contact page shows your email address and Instagram link instead of the form.
 
 ## Publishing a story (for editors)
 
@@ -73,10 +81,10 @@ The site has no database. Everything is kept as files in this GitHub repository:
 
 - **Stories:** one text (Markdown) file each in `src/articles/`
 - **Photos uploaded in the admin:** `src/images/uploads/`
-- **Editor logins:** Netlify Identity (passwords are stored by Netlify, not in the repo)
-- **Contact form messages:** Netlify Forms (**Netlify → Forms**, with email notifications available)
+- **Editor logins:** DecapBridge (passwords are stored by DecapBridge, not in the repo)
+- **Contact form messages:** emailed to you by Web3Forms (nothing is stored on the site)
 
-Publishing a story saves a file to GitHub. Netlify sees the change, rebuilds the site and puts it online. Every change is kept in GitHub's history, so a deleted or edited story can always be recovered.
+Publishing a story saves a file to GitHub. Vercel sees the change, rebuilds the site and puts it online. Every change is kept in GitHub's history, so a deleted or edited story can always be recovered.
 
 **Tips:** keep photos under about 500 KB (resize to ~1600px wide before uploading). GitHub repositories work best below about 1 GB in total, which is roughly 2,000–3,000 news photos at that size.
 
