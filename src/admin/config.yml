@@ -1,0 +1,59 @@
+# Decap CMS — the Deccan Times newsroom at /admin
+# Editors log in with GitHub (see README.md → "Admin panel login").
+backend:
+  name: github
+  repo: dragonfruit0/deccan-times
+  branch: main
+  commit_messages:
+    create: "News: publish “{{slug}}”"
+    update: "News: update “{{slug}}”"
+    delete: "News: remove “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+
+# Uncomment to test the admin locally with `npx decap-server` (no login needed)
+# local_backend: true
+
+site_url: https://deccantimes.netlify.app
+display_url: https://deccantimes.netlify.app
+logo_url: /favicon.svg
+
+media_folder: src/images/uploads
+public_folder: /images/uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: articles
+    label: News Stories
+    label_singular: Story
+    description: Every story published on the website. The newest story marked “Lead story” goes on top of the front page.
+    folder: src/articles
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} — {{category}} ({{date | date('DD MMM YYYY')}})"
+    sortable_fields: [date, title, category]
+    view_filters:
+      - { label: Lead stories, field: lead, pattern: true }
+      - { label: Breaking, field: breaking, pattern: true }
+    view_groups:
+      - { label: Section, field: category }
+    fields:
+      - { label: Headline, name: title, widget: string }
+      - { label: Short summary (one line under the headline), name: deck, widget: text, required: false }
+      - label: Section
+        name: category
+        widget: select
+        options: [Hyderabad, Telangana, Andhra Pradesh, India, World, Sports, Entertainment, Business, Opinion]
+        default: Hyderabad
+      - { label: Publish date & time, name: date, widget: datetime }
+      - { label: Reporter / byline, name: author, widget: string, default: Deccan Times Desk }
+      - { label: Main photo, name: image, widget: image, required: false }
+      - { label: Photo description (for blind readers), name: imageAlt, widget: string, required: false }
+      - { label: Photo caption, name: caption, widget: string, required: false }
+      - { label: Photo credit, name: photoCredit, widget: string, required: false }
+      - { label: Lead story (show big on the front page), name: lead, widget: boolean, default: false }
+      - { label: Breaking news (show in the red ticker), name: breaking, widget: boolean, default: false }
+      - { label: Story, name: body, widget: markdown }

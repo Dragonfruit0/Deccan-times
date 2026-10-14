@@ -1,0 +1,61 @@
+---
+layout: base.njk
+pagination:
+  data: site.categories
+  size: 1
+  alias: cat
+permalink: "/category/{{ cat.slug }}/"
+eleventyComputed:
+  title: "{{ cat.name }} News"
+  activeCategory: "{{ cat.name }}"
+  description: "Latest {{ cat.name }} news from The Deccan Times."
+---
+{%- set items = collections.articles | byCategory(cat.name) -%}
+{%- set top = items[0] -%}
+<div class="section-banner">
+  <span>Section</span>
+  <h1>{{ cat.name }}</h1>
+  <span>{{ items.length }} {{ "story" if items.length == 1 else "stories" }}</span>
+</div>
+<main class="layout">
+<section>
+{% if top %}
+<article class="hero">
+  <div class="hero-copy">
+    <div class="kicker">{{ cat.name }}</div>
+    <h2><a href="{{ top.url }}">{{ top.data.title }}</a></h2>
+    {% if top.data.deck %}<div class="deck">{{ top.data.deck }}</div>{% endif %}
+    <p class="story">{{ top.content | stripHtml | truncate(320) }}</p>
+    <div class="byline">By {{ top.data.author }} · {{ top.date | longDate }}</div>
+    <a class="continue" href="{{ top.url }}">Continue Reading →</a>
+  </div>
+  {% if top.data.image %}
+  <div class="hero-photo">
+    <a href="{{ top.url }}" class="photo photo-sm"><img src="{{ top.data.image }}" alt="{{ top.data.imageAlt or top.data.title }}"></a>
+  </div>
+  {% endif %}
+</article>
+{% set grid = items | offset(1) | limit(6) %}
+{% if grid.length %}
+<div class="sectionline">MORE IN {{ cat.name | upper }}</div>
+<section class="cards cards-3">
+  {% for item in grid %}{% include "partials/card.njk" %}{% endfor %}
+</section>
+{% endif %}
+{% set older = items | offset(7) %}
+{% if older.length %}
+<div class="sectionline">OLDER STORIES</div>
+<ul class="older">
+  {% for item in older %}<li><a href="{{ item.url }}">{{ item.data.title }}</a> <time>{{ item.date | shortDate }}</time></li>{% endfor %}
+</ul>
+{% endif %}
+{% else %}
+<p class="empty">No {{ cat.name }} stories yet — check back soon, or follow us on <a href="{{ site.instagram }}">Instagram</a> for the latest.</p>
+{% endif %}
+</section>
+<aside class="side">
+  <div class="side-title">Latest News</div>
+  {% for item in collections.articles | limit(6) %}{% include "partials/latest.njk" %}{% endfor %}
+  {% include "partials/follow.njk" %}
+</aside>
+</main>

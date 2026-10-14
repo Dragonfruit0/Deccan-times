@@ -1,0 +1,8 @@
+<article class="card">
+  <div class="kicker"><a href="/category/{{ item.data.category | slugify }}/">{{ item.data.category }}</a></div>
+  {% if item.data.image %}<a href="{{ item.url }}"><img src="{{ item.data.image }}" alt="{{ item.data.imageAlt or item.data.title }}" loading="lazy"></a>{% endif %}
+  <h3><a href="{{ item.url }}">{{ item.data.title }}</a></h3>
+  {% if item.data.deck %}<p>{{ item.data.deck }}</p>{% endif %}
+  <time datetime="{{ item.date | isoDate }}">{{ item.date | shortDate }}</time>
+  <a class="read" href="{{ item.url }}">Read More →</a>
+</article>

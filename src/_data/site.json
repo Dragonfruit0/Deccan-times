@@ -1,0 +1,23 @@
+{
+  "name": "The Deccan Times",
+  "shortName": "Deccan Times",
+  "tagline": "Voice of the Deccan · News That Matters · Hyderabad",
+  "description": "The Deccan Times brings you the latest news from Hyderabad, Telangana, Andhra Pradesh, India and the world.",
+  "url": "https://deccantimes.netlify.app",
+  "city": "Hyderabad",
+  "edition": "Hyderabad Edition",
+  "email": "contact@deccantimes.in",
+  "instagram": "https://www.instagram.com/deccantimes",
+  "facebook": "https://www.facebook.com/deccantimes",
+  "categories": [
+    { "name": "Hyderabad", "slug": "hyderabad" },
+    { "name": "Telangana", "slug": "telangana" },
+    { "name": "Andhra Pradesh", "slug": "andhra-pradesh" },
+    { "name": "India", "slug": "india" },
+    { "name": "World", "slug": "world" },
+    { "name": "Sports", "slug": "sports" },
+    { "name": "Entertainment", "slug": "entertainment" },
+    { "name": "Business", "slug": "business" },
+    { "name": "Opinion", "slug": "opinion" }
+  ]
+}

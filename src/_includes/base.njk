@@ -1,0 +1,113 @@
+{%- set pageTitle = (title + " — " + site.name) if title and page.url != "/" else (site.name + " — " + site.city + " News") -%}
+{%- set pageDesc = (deck or description or site.description) -%}
+{%- set pageImage = (image or "/images/og-default.png") | absUrl(site.url) -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ pageTitle }}</title>
+<meta name="description" content="{{ pageDesc }}">
+<link rel="canonical" href="{{ page.url | absUrl(site.url) }}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:type" content="{{ 'article' if category else 'website' }}">
+<meta property="og:title" content="{{ title or site.name }}">
+<meta property="og:description" content="{{ pageDesc }}">
+<meta property="og:url" content="{{ page.url | absUrl(site.url) }}">
+<meta property="og:image" content="{{ pageImage }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ title or site.name }}">
+<meta name="twitter:description" content="{{ pageDesc }}">
+<meta name="twitter:image" content="{{ pageImage }}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="paper">
+
+<header class="mast">
+  <div class="edition">
+    <strong>{{ site.edition }}</strong><br>
+    <span data-today-weekday>{{ build.now | weekday }}</span><br>
+    <span data-today>{{ build.now | longDate }}</span>
+  </div>
+  <div class="logo">
+    <a href="/"><h1>{{ site.name }}</h1></a>
+    <p>{{ site.tagline }}</p>
+  </div>
+  <div class="meta">
+    {% include "partials/social.njk" %}
+    Follow for daily updates<br>
+    {{ site.city }} · India
+  </div>
+</header>
+
+<nav class="nav" aria-label="Sections">
+  <button class="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+  <ul class="navlinks">
+    <li><a href="/" {% if page.url == "/" %}class="active"{% endif %}>Home</a></li>
+    {%- for c in site.categories %}
+    <li><a href="/category/{{ c.slug }}/" {% if activeCategory == c.name or category == c.name %}class="active"{% endif %}>{{ c.name }}</a></li>
+    {%- endfor %}
+  </ul>
+  <form class="search" action="/search/" method="get" role="search">
+    <input name="q" placeholder="Search news..." aria-label="Search news">
+    <button type="submit" aria-label="Search">⌕</button>
+  </form>
+  <div id="mobileMenu" class="mobileMenu">
+    <a href="/">Home</a>
+    {%- for c in site.categories %}<a href="/category/{{ c.slug }}/">{{ c.name }}</a>{% endfor %}
+    <a href="/about/">About</a><a href="/contact/">Contact</a>
+  </div>
+</nav>
+
+<div class="breaking">
+  <b>BREAKING</b>
+  <div class="ticker"><div class="ticker-track">
+    {%- for copy in [1, 2] %}
+    <span class="ticker-set"{% if copy == 2 %} aria-hidden="true"{% endif %}>
+      {%- for a in collections.articles | breakingNews %}<a href="{{ a.url }}"{% if copy == 2 %} tabindex="-1"{% endif %}>{{ a.data.title }}</a>{% endfor -%}
+    </span>
+    {%- endfor %}
+  </div></div>
+</div>
+
+{{ content | safe }}
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">{{ site.name }}</div>
+      <p>{{ site.description }}</p>
+    </div>
+    <div>
+      <div class="foot-title">Sections</div>
+      <ul class="foot-links">
+        {%- for c in site.categories %}<li><a href="/category/{{ c.slug }}/">{{ c.name }}</a></li>{% endfor %}
+      </ul>
+    </div>
+    <div>
+      <div class="foot-title">Deccan Times</div>
+      <ul class="foot-links">
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="{{ site.instagram }}" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="{{ site.facebook }}" target="_blank" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© {{ build.now.getFullYear() }} {{ site.name }}</span>
+    <span>Independent · Informative · Responsible</span>
+    <span>{{ site.city }} · India</span>
+  </div>
+</footer>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

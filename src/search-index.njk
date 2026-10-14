@@ -1,0 +1,5 @@
+---
+permalink: /search.json
+eleventyExcludeFromCollections: true
+---
+[{% for a in collections.articles %}{"t":{{ a.data.title | json | safe }},"d":{{ (a.data.deck or "") | json | safe }},"c":{{ a.data.category | json | safe }},"u":{{ a.url | json | safe }},"i":{{ (a.data.image or "") | json | safe }},"dt":{{ a.date | shortDate | json | safe }},"b":{{ a.content | stripHtml | truncate(600) | json | safe }}}{% if not loop.last %},{% endif %}{% endfor %}]

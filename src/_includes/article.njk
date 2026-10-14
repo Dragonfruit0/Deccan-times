@@ -1,0 +1,38 @@
+---
+layout: base.njk
+---
+{%- set related = collections.articles | byCategory(category) | exclude(page) | limit(4) -%}
+{%- set latestAll = collections.articles | exclude(page) | limit(5) -%}
+<main class="layout">
+<article class="article">
+  <div class="kicker"><a href="/category/{{ category | slugify }}/">{{ category }}</a>{% if sample %} <span class="sample-tag">Sample story</span>{% endif %}</div>
+  <h1 class="headline">{{ title }}</h1>
+  {% if deck %}<p class="deck article-deck">{{ deck }}</p>{% endif %}
+  <div class="byline article-byline">
+    By {{ author }} · <time datetime="{{ page.date | isoDate }}">{{ page.date | dateTime }}</time> · {{ content | readingTime }} min read
+  </div>
+  {% if image %}
+  <figure class="article-photo">
+    <div class="photo"><img src="{{ image }}" alt="{{ imageAlt or title }}"></div>
+    <figcaption class="caption"><span>{{ caption }}</span><span>PHOTO: {{ (photoCredit or site.shortName) | upper }}</span></figcaption>
+  </figure>
+  {% endif %}
+  <div class="article-body">
+    {{ content | safe }}
+  </div>
+  {% include "partials/share.njk" %}
+
+  {% if related.length %}
+  <div class="sectionline">MORE FROM {{ category | upper }}</div>
+  <section class="cards">
+    {% for item in related %}{% include "partials/card.njk" %}{% endfor %}
+  </section>
+  {% endif %}
+</article>
+
+<aside class="side">
+  <div class="side-title">Latest News</div>
+  {% for item in latestAll %}{% include "partials/latest.njk" %}{% endfor %}
+  {% include "partials/follow.njk" %}
+</aside>
+</main>

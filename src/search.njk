@@ -1,0 +1,14 @@
+---
+layout: base.njk
+title: Search
+permalink: /search/
+---
+<div class="section-banner"><span>Archive</span><h1>Search</h1><span>{{ site.city }}</span></div>
+<main class="article narrow">
+  <form class="search-big" action="/search/" method="get" role="search">
+    <input name="q" id="q" placeholder="Search Deccan Times..." aria-label="Search">
+    <button type="submit">Search</button>
+  </form>
+  <p id="search-status" class="byline"></p>
+  <div id="search-results" class="results"></div>
+</main>

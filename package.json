@@ -1,0 +1,14 @@
+{
+  "name": "deccan-times",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Deccan Times — newspaper-style news website",
+  "type": "module",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.6"
+  }
+}

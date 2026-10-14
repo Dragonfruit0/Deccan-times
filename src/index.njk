@@ -1,0 +1,63 @@
+---
+layout: base.njk
+---
+{%- set all = collections.articles -%}
+{%- set lead = all | leadStory -%}
+{%- set rest = all | exclude(lead) -%}
+<main class="layout">
+<section>
+
+{% if lead %}
+<article class="hero">
+  <div class="hero-copy">
+    <div class="kicker"><a href="/category/{{ lead.data.category | slugify }}/">{{ lead.data.category }}</a></div>
+    <h2><a href="{{ lead.url }}">{{ lead.data.title }}</a></h2>
+    {% if lead.data.deck %}<div class="deck">{{ lead.data.deck }}</div>{% endif %}
+    <p class="story">{{ lead.content | stripHtml | truncate(420) }}</p>
+    <div class="byline">By {{ lead.data.author }} · {{ lead.date | longDate }}</div>
+    <a class="continue" href="{{ lead.url }}">Continue Reading →</a>
+  </div>
+  {% if lead.data.image %}
+  <div class="hero-photo">
+    <a href="{{ lead.url }}" class="photo"><img src="{{ lead.data.image }}" alt="{{ lead.data.imageAlt or lead.data.title }}"></a>
+    <div class="caption"><span>{{ lead.data.caption }}</span><span>PHOTO: {{ (lead.data.photoCredit or site.shortName) | upper }}</span></div>
+  </div>
+  {% endif %}
+</article>
+{% else %}
+<p class="empty">No stories yet. Log in at <a href="/admin/">/admin</a> to publish the first one.</p>
+{% endif %}
+
+{% set headlines = rest | limit(4) %}
+{% if headlines.length %}
+<div class="sectionline">TODAY'S HEADLINES</div>
+<section class="cards">
+  {% for item in headlines %}{% include "partials/card.njk" %}{% endfor %}
+</section>
+{% endif %}
+
+<section class="editorial">
+  <div>
+    <div class="label">FROM THE EDITOR</div>
+    <h2>News Beyond the Headlines</h2>
+    <p>{{ site.shortName }} began as a small newsroom on Instagram and Facebook, bringing the stories of Hyderabad and the Deccan to your feed. This website is our new home — a place to read the full story, in context, and share it with the people who matter to you.</p>
+  </div>
+  <div class="quote">“A newspaper should not merely tell you what happened. It should help you understand why it matters.”</div>
+</section>
+
+{% set more = rest | offset(4) | limit(6) %}
+{% if more.length %}
+<div class="sectionline">MORE NEWS</div>
+<section class="cards cards-3">
+  {% for item in more %}{% include "partials/card.njk" %}{% endfor %}
+</section>
+{% endif %}
+
+</section>
+
+<aside class="side">
+  <div class="side-title">Latest News</div>
+  {% for item in all | limit(6) %}{% include "partials/latest.njk" %}{% endfor %}
+  {% include "partials/follow.njk" %}
+</aside>
+</main>
