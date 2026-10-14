@@ -31,22 +31,24 @@ npm run build      # outputs the finished site to _site/
 2. In [Netlify](https://app.netlify.com/): **Add new site → Import an existing project → GitHub → dragonfruit0/deccan-times**. Netlify reads the build settings from `netlify.toml`.
 3. Optional: under **Domain management**, rename the site or connect your own domain (e.g. `deccantimes.in`). Then update `url` in `src/_data/site.json` and `site_url` in `src/admin/config.yml`.
 
-### Admin panel login (GitHub)
+### Admin panel login (email + password)
 
-The admin panel logs editors in with GitHub:
+Editors log in with an email address and password. They do **not** need GitHub accounts. This uses Netlify Identity and Git Gateway.
 
-1. On GitHub, go to **Settings → Developer settings → OAuth Apps → New OAuth App**.
-   - Homepage URL: your site URL
-   - Authorization callback URL: `https://api.netlify.com/auth/done`
-2. Copy the Client ID and generate a Client Secret.
-3. In Netlify: **Site configuration → Access & security → OAuth → Install provider → GitHub**, then paste both values.
-4. Add each editor as a collaborator on the GitHub repo (**Settings → Collaborators**). Every editor needs a free GitHub account.
+1. In Netlify, open your site and go to **Project configuration → Identity**, then click **Enable Identity**.
+2. Under **Registration**, choose **Invite only**, so strangers can't sign up.
+3. Under **Services → Git Gateway**, click **Enable Git Gateway**. This lets the admin panel save stories to GitHub on the editors' behalf.
+4. Go to the **Identity** tab and click **Invite users**, then enter each editor's email.
+5. Each editor gets an email, clicks the link, and sets a password. After that they log in at `https://<your-site>/admin/`.
 
-Editors then open `https://<your-site>/admin/` and click **Login with GitHub**.
+Removing an editor: **Identity** tab → click the user → **Delete user**.
+Forgotten password: on the login box, click **Forgot password?**.
+
+> Note: Netlify says Git Gateway still works but won't get new features. If it is ever switched off, the admin panel can move to another login service (e.g. DecapBridge) by changing the `backend` section of `src/admin/config.yml`; the site and stories stay the same.
 
 ## Publishing a story (for editors)
 
-1. Go to `/admin/` and log in.
+1. Go to `/admin/` and log in with your email and password.
 2. Click **New Story**.
 3. Fill in the headline, summary and section, upload a photo, and write the story.
 4. Tick **Lead story** to put it big on the front page. Tick **Breaking news** to add it to the red ticker.
@@ -64,6 +66,19 @@ If you add or rename a section, also update the `category` options in `src/admin
 ## Sample stories
 
 The stories in `src/articles/` are samples. Each one shows a "Sample story" label. Delete them from the admin panel once real news is published.
+
+## Where things are stored (no database)
+
+The site has no database. Everything is kept as files in this GitHub repository:
+
+- **Stories:** one text (Markdown) file each in `src/articles/`
+- **Photos uploaded in the admin:** `src/images/uploads/`
+- **Editor logins:** Netlify Identity (passwords are stored by Netlify, not in the repo)
+- **Contact form messages:** Netlify Forms (**Netlify → Forms**, with email notifications available)
+
+Publishing a story saves a file to GitHub. Netlify sees the change, rebuilds the site and puts it online. Every change is kept in GitHub's history, so a deleted or edited story can always be recovered.
+
+**Tips:** keep photos under about 500 KB (resize to ~1600px wide before uploading). GitHub repositories work best below about 1 GB in total, which is roughly 2,000–3,000 news photos at that size.
 
 ## Files
 

@@ -1,8 +1,8 @@
 # Decap CMS — the Deccan Times newsroom at /admin
-# Editors log in with GitHub (see README.md → "Admin panel login").
+# Editors log in with email + password (Netlify Identity + Git Gateway).
+# See README.md → "Admin panel login".
 backend:
-  name: github
-  repo: dragonfruit0/deccan-times
+  name: git-gateway
   branch: main
   commit_messages:
     create: "News: publish “{{slug}}”"
